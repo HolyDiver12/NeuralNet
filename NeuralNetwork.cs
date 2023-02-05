@@ -117,8 +117,8 @@ namespace NeuralNet
             }
             net_layers_[0].LoadIconData(icon);
             for (int i = 1; i < net_layers_.Length; i++)
-                net_layers_[i].CalculateForward(net_params_.Func);
-            return net_layers_[^1].CalcOutputError(icon, net_params_.Func);
+                net_layers_[i].CalculateForward();
+            return net_layers_[^1].CalcOutputError(icon);
         }
 
         public void DoErrBackPropagation()

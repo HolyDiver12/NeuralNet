@@ -22,7 +22,7 @@ namespace NeuralNet
         // Если do_add_bias = true - добавляет к слою нейрон смещения сверх размера size
         public NeuralNetLayer(int size, LayerPosition pos, ActivateClass act_func,
                                 bool do_add_bias = false, NeuralNetLayer? previous = null,
-                                (float f_value_, float f_last_diff_)[][]? synaps_vectors = null)
+                                (float f_value_, float f_last_diff_)[][]? synapsVectors = null)
         {
             Position = pos;
             if (size == 0) throw new InvalidOperationException("Trying to create a layer of zero size");
@@ -32,7 +32,7 @@ namespace NeuralNet
             neurons_array_ = new Neuron[do_add_bias ? (size + 1) : size];
             for (int i = 0; i < size; i++) // для всех кроме bias
             {
-                neurons_array_[i] = new Neuron(previous == null ? 0 : previous.neurons_array_.Length, i, act_func, synaps_vectors == null ? null : synaps_vectors[i]);
+                neurons_array_[i] = new Neuron(previous == null ? 0 : previous.neurons_array_.Length, i, act_func, synapsVectors?[i]);
             }
             if (do_add_bias) //если нужно добавляем bias со значением 1
             {
@@ -83,7 +83,7 @@ namespace NeuralNet
         //-------------------------------------------
         // Расчитывает значения нейронов слоя по данным предыдущего
         //
-        public void CalculateForward(ActivationFunc func)
+        public void CalculateForward()
         {
             if (Position == LayerPosition.Input)
             {
@@ -100,7 +100,7 @@ namespace NeuralNet
         // значений нейронов от правильного ответа, а также определяет угадано ли значение иконки
         // возвращает (среднее квадратов отклонений, угадано значение?)
         // ы
-        public (float, bool) CalcOutputError(in NNIcon icon, ActivationFunc func)
+        public (float, bool) CalcOutputError(in NNIcon icon)
         {
             if (Position != LayerPosition.Out)
             {
