@@ -63,8 +63,8 @@ namespace NeuralNet
             if (net_params_.LayersSize.Length < 2)
                 throw new InvalidOperationException("Neural net shoul has at least 2 layers");
 
-            ActivateClass act_func; //Решенице так себе
-            switch (net_params_.Func)
+            ActivateClass act_func = net_params_.activateClass; 
+            /*switch (net_params_.Func)
             {
                 case ActivationFunc.ACT_SIGMOID:
                     act_func = new ActivateSigmoid();
@@ -75,7 +75,7 @@ namespace NeuralNet
                 default:
                     act_func = new ActivateReLu();
                     break;
-            }
+            }*/
 
             net_layers_ = new NeuralNetLayer[net_params_.LayersSize.Length];
             for (int i = 0; i < net_params_.LayersSize.Length; i++)
