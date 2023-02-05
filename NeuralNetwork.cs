@@ -129,6 +129,7 @@ namespace NeuralNet
 
         public void Save(string path)
         {
+            if (net_layers_ == null) throw new Exception("net_layers_ = NULL!");
             NNSerialisationInfo net_info = new()
             {
                 synaps_vectors = new (float f_value_, float f_last_diff_)[net_layers_.Length - 1][][],
@@ -140,6 +141,7 @@ namespace NeuralNet
                 net_info.synaps_vectors[i] = new (float f_value_, float f_last_diff_)[net_layers_[i + 1].neurons_array_.Length][];
                 for (int j = 0; j < net_layers_[i + 1].neurons_array_.Length; j++)
                 {
+                    //if (net_layers_[i + 1].neurons_array_[j].synaps_array_ == null) throw new Exception("net_layers_ are not initialized!");
                     net_info.synaps_vectors[i][j] = net_layers_[i + 1].neurons_array_[j].synaps_array_;
                 }
             }

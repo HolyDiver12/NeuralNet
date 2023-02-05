@@ -7,7 +7,7 @@
         public const string NN_TEST_FILE = "DATASET/optdigits.tes";
         public const string NN_FILE = "NeuralNet.xml";
 
-        public static Random rand;
+        public static Random? rand;
 
         public static void Main()
         {
@@ -76,7 +76,7 @@
             }
             Console.WriteLine($"{read_count} icons read and prepared");
 
-            NeuralNetwork my_net;
+            //NeuralNetwork my_net;
             Console.WriteLine("Creating neural network and initializing with parameters");
             try
             {
@@ -110,16 +110,16 @@
 
         public static int GetUserUnswer( string greeting, string variants, bool isCaseSensitive = false)
         {
-            int result = 0;
+            int result;
             string? input_string;
-            if(!isCaseSensitive)  greeting.ToUpper(); 
+            if(!isCaseSensitive)  greeting = greeting.ToUpper(); 
             Console.Write( greeting );
             while (true)
             {
                 input_string = Console.ReadLine();
                 if (input_string==null) continue;
                 if (input_string.Length > 1) continue;
-                if( !isCaseSensitive ) input_string.ToUpper();
+                if( !isCaseSensitive ) input_string = input_string.ToUpper();
                 result = variants.IndexOf(input_string);
                 if(result == -1) continue;
                 break;

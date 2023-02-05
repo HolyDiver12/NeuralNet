@@ -91,6 +91,7 @@ namespace NeuralNet
             }
             for (int i = 0; i < LayerSize; i++) // не обрабатываем bias 
             {
+                if (previous_layer == null) throw new Exception("Previous layer reference was not initialized");
                 neurons_array_[i].CalcValue(previous_layer); // проверка на null выше
             }
         }
