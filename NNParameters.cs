@@ -27,5 +27,11 @@ namespace NeuralNet
             DoAddBias = false;
             LayersSize = new int[] { 64, 50, 50, 10 };
         }
+        public void ConPrintOut()
+        {
+            Console.WriteLine("Neural Network parameters are:");
+            Console.WriteLine("\tUse bias neurons: " + (DoAddBias? "Yes" : "No"));
+            Console.WriteLine("\tActivation function used: ");
+        }
     }
 }

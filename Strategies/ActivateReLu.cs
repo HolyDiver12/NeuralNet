@@ -8,7 +8,7 @@ namespace NeuralNet.Strategies
 {
     public class ActivateReLu : ActivateClass, IActivateFunc
     {
-        public ActivateReLu() : base(ActivationFunc.ACT_RELU) { }
+        public ActivateReLu() : base(ActivationFunc.ACT_RELU) => FuncName = "ReLu";
 
         public override float ActivateValue(float input_value)
         {

@@ -18,7 +18,7 @@
                 switch (i)
                 {
                     case 0:
-                        my_net.InitWithParameters(new NNParameters()); break;
+                        my_net.InitWithParameters(new NNParameters()); break; //Find actual parameters in NNParameters ctor.
                     case 1:
                         my_net.InitFromFile(NN_FILE); break;
                     default:
@@ -36,7 +36,7 @@
 
             i = GetUserUnswer("Network is ready! Train (1), or Test (2)? (1/2):", "12");
 
-            if( i == 0)
+            if( i == 0)  //Going to perform some workouts
             {
                 NNData data = new();
                 try

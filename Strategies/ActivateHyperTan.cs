@@ -8,7 +8,7 @@ namespace NeuralNet.Strategies
 {
     public class ActivateHyperTan : ActivateClass, IActivateFunc
     {
-        public ActivateHyperTan() : base(ActivationFunc.ACT_HYPER_TAN) { }
+        public ActivateHyperTan() : base(ActivationFunc.ACT_HYPER_TAN) => FuncName = "Hyper Tangen";
 
         public override float ActivateValue(float input_value)
         {

@@ -8,7 +8,7 @@ namespace NeuralNet.Strategies
 {
     public class ActivateSigmoid : ActivateClass, IActivateFunc
     {
-        public ActivateSigmoid() : base(ActivationFunc.ACT_SIGMOID) { }
+        public ActivateSigmoid() : base(ActivationFunc.ACT_SIGMOID) => FuncName = "Sigmoid";
 
         public override float ActivateValue(float input_value)
         {
