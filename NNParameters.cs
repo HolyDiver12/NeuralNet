@@ -25,6 +25,7 @@ namespace NeuralNet
         {
             LearnRate = 0.7F;
             Momentum = 0.6F;
+            //Func = ActivationFunc.ACT_SIGMOID;
             Func = ActivationFunc.ACT_SIGMOID;
             activateClass = new ActivateSigmoid();
             InitSynaps = InitSynapsMethod.INIT_KAIMING;

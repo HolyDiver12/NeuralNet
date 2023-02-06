@@ -41,7 +41,7 @@
 
             bool quit = false;
             while (!quit) {
-                unswer = GetUserUnswer("Train (1), Test (2), or Quit? (1/2/Q):", "12Q");
+                unswer = GetUserUnswer("Train (1), Test (2), or Quit, or alg test (3)? (1/2/Q/3):", "12Q3");
                 switch (unswer)
                 {
                     case 0:
@@ -121,6 +121,41 @@
                                 if (uns == 0) my_net.Save(NN_FILE);
                             }
                             quit = true;
+                            break;
+                        }
+                    case 3:
+                        {
+                            NNData data = new();
+                            try
+                            {
+                                data.ReadFromFile(NN_TEST_FILE);
+                                data.Prepare(PrepareType.PREP_ZERO_WAV);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Failed to load test dataset!");
+                                Console.WriteLine(ex.Message);
+                                Console.WriteLine(ex.StackTrace);
+                                throw;
+                            }
+                            RollingAverage<float> rollingAverage = new(300);
+                            float performance = 0F;
+                            (float error, bool guess) nn_result;
+                            //Console.WriteLine($"Test run of {data.icons_list_.Count} icons");
+                            for (int i = 0; i < data.icons_list_.Count; i++)
+                            {
+                                nn_result = my_net.DoForwardRun(data.icons_list_[1]);
+                                rollingAverage.AddValue(nn_result.error);
+                                if (nn_result.guess) performance++;
+                                
+                                
+                                Console.WriteLine($"{i} sets processed with av error of {rollingAverage.Average}");
+
+                                
+                                my_net.DoErrBackPropagation();
+                                Console.ReadKey();
+                            }
+                            Console.WriteLine($"Test complete with overall performance of {performance / data.icons_list_.Count}%");
                             break;
                         }
                 }
