@@ -13,10 +13,10 @@
         {
             rand = new Random();
             NeuralNetwork my_net = new();
-            int i = GetUserUnswer($"Ready to initialize new neural network (1), or load it from file {NN_FILE} (2)? (1/2/Q):", "12Q");
+            int unswer = GetUserUnswer($"Ready to initialize new neural network (1), or load it from file {NN_FILE} (2)? (1/2/Q):", "12Q");
             try
             {
-                switch (i)
+                switch (unswer)
                 {
                     case 0:
                         my_net.InitWithParameters(new NNParameters()); break; //Find actual parameters in NNParameters ctor.
@@ -37,78 +37,96 @@
 
             my_net.net_params_.ConPrintOut();
 
-            i = GetUserUnswer("Network is ready! Train (1), or Test (2)? (1/2):", "12");
+            Console.Write("Network is ready! ");
 
-            if( i == 0)  //Going to perform some workouts
-            {
-                NNData data = new();
-                try
+            bool quit = false;
+            while (!quit) {
+                unswer = GetUserUnswer("Train (1), Test (2), or Quit? (1/2/Q):", "12Q");
+                switch (unswer)
                 {
-                    data.ReadFromFile(NN_TRAIN_FILE);
-                    data.Prepare(PrepareType.PREP_ZERO_WAV);
+                    case 0:
+                        {    //Going to perform some workouts
+                            NNData data = new();
+                            try
+                            {
+                                data.ReadFromFile(NN_TRAIN_FILE);
+                                data.Prepare(PrepareType.PREP_ZERO_WAV);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Failed to load test dataset!");
+                                Console.WriteLine(ex.Message);
+                                Console.WriteLine(ex.StackTrace);
+                                throw;
+                            }
+
+                            RollingAverage<float> rollingAverage = new(300);
+                            float performance = 0F;
+                            (float error, bool guess) nn_result;
+                            Console.WriteLine($"Train run of {data.icons_list_.Count} icons");
+                            for (int i = 0; i < data.icons_list_.Count; i++)
+                            {
+                                nn_result = my_net.DoForwardRun(data.icons_list_[i]);
+                                rollingAverage.AddValue(nn_result.error);
+                                if (nn_result.guess) performance++;
+                                if (i % 300 == 0 && i != 0)
+                                {
+                                    Console.WriteLine($"{i} sets processed with av error of {rollingAverage.Average} and performance {performance / 300f} %");
+                                    performance = 0f;
+                                }
+                                my_net.DoErrBackPropagation();
+                            }
+                            Console.WriteLine("Training complete!");
+                            break;
+                        }
+                    case 1:
+                        {
+                            NNData data = new();
+                            try
+                            {
+                                data.ReadFromFile(NN_TEST_FILE);
+                                data.Prepare(PrepareType.PREP_ZERO_WAV);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Failed to load test dataset!");
+                                Console.WriteLine(ex.Message);
+                                Console.WriteLine(ex.StackTrace);
+                                throw;
+                            }
+                            RollingAverage<float> rollingAverage = new(300);
+                            float performance = 0F;
+                            (float error, bool guess) nn_result;
+                            Console.WriteLine($"Test run of {data.icons_list_.Count} icons");
+                            for (int i = 0; i < data.icons_list_.Count; i++)
+                            {
+                                nn_result = my_net.DoForwardRun(data.icons_list_[i]);
+                                rollingAverage.AddValue(nn_result.error);
+                                if (nn_result.guess) performance++;
+                                if (i % 300 == 0 && i != 0)
+                                {
+                                    Console.WriteLine($"{i} sets processed with av error of {rollingAverage.Average}");
+
+                                }
+                                my_net.DoErrBackPropagation();
+                            }
+                            Console.WriteLine($"Test complete with overall performance of {performance / data.icons_list_.Count}%");
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (!my_net.IsSaved)
+                            {
+                                int uns = GetUserUnswer("Your neural net is not saved! Save? (Y/N):", "YN");
+                                if (uns == 0) my_net.Save(NN_FILE);
+                            }
+                            quit = true;
+                            break;
+                        }
                 }
-                catch(Exception ex)
-                {
-                    Console.WriteLine("Failed to load test dataset!");
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
-                    throw;
-                }
-
-
             }
-
-
-
-            rand = new Random();
-            Console.WriteLine("Reading icons from file");
-            NNData icons = new();
-            int read_count;
-            try
-            {
-                read_count = icons.ReadFromFile(NN_TRAIN_FILE);
-                icons.Prepare(PrepareType.PREP_ZERO_WAV);
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to read icons from file and initialize");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
-                return;
-            }
-            Console.WriteLine($"{read_count} icons read and prepared");
-
-            //NeuralNetwork my_net;
-            Console.WriteLine("Creating neural network and initializing with parameters");
-            try
-            {
-                my_net = new NeuralNetwork(new NNParameters());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to create and initialize neural net");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
-                return;
-            }
-
-            (float f_result, bool was_gess) result;
-
-            do
-            {
-                result = my_net.DoForwardRun(icons.icons_list_[0]);
-                my_net.DoErrBackPropagation();
-
-                Console.WriteLine($"Variation = {result.f_result} \t Guess? {result.was_gess}");
-                //Console.ReadKey();
-
-
-            } while (result.f_result > 0.001);
-
-
-
-            Console.WriteLine("Everything seem to be OK!");
+            Console.WriteLine("Have a nice day!");
+            return;
         }
 
         public static int GetUserUnswer( string greeting, string variants, bool isCaseSensitive = false)

@@ -54,8 +54,8 @@ namespace NeuralNet
         //
         public void MakeBias()
         {
-            IsBias = true;
             Val = 1.0F;
+            IsBias = true;
         }
 
         //------------------------------

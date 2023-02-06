@@ -115,6 +115,7 @@ namespace NeuralNet
             {
                 throw new InvalidOperationException("Error! Trying to calculate with neural network not initialized");
             }
+            IsSaved = false;
             net_layers_[0].LoadIconData(icon);
             for (int i = 1; i < net_layers_.Length; i++)
                 net_layers_[i].CalculateForward();
@@ -151,6 +152,7 @@ namespace NeuralNet
             using FileStream fs = File.Create(path);
             xml_net_params_ser.Serialize(fs, net_info);
             fs.Close();
+            IsSaved = true;
         }
 
         public NNSerialisationInfo? LoadNeuralNetInfo(string path)

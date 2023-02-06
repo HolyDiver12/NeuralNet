@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using NeuralNet.Strategies;
 
 namespace NeuralNet
@@ -13,6 +14,7 @@ namespace NeuralNet
         public float LearnRate;
         public float Momentum;
         public ActivationFunc Func;
+        [XmlIgnore]
         public ActivateClass activateClass;
         public InitSynapsMethod InitSynaps;
         public PrepareType NetPrepare;
@@ -27,7 +29,7 @@ namespace NeuralNet
             activateClass = new ActivateSigmoid();
             InitSynaps = InitSynapsMethod.INIT_KAIMING;
             NetPrepare = PrepareType.PREP_ZERO_WAV;
-            DoAddBias = false;
+            DoAddBias = true;
             LayersSize = new int[] { 64, 50, 50, 10 };
         }
         public void ConPrintOut()
