@@ -11,7 +11,7 @@ namespace NeuralNet
 {
     public class NeuralNetwork
     {
-        private NNParameters? net_params_;
+        public NNParameters? net_params_ { get; private set;}
         private NeuralNetLayer[]? net_layers_;
         public bool IsSaved { get; private set; }
         public bool IsInitialized { get; private set; }

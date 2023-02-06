@@ -11,6 +11,7 @@
 
         public static void Main()
         {
+            rand = new Random();
             NeuralNetwork my_net = new();
             int i = GetUserUnswer($"Ready to initialize new neural network (1), or load it from file {NN_FILE} (2)? (1/2/Q):", "12Q");
             try
@@ -33,6 +34,8 @@
                 Console.WriteLine(ex.StackTrace);
                 throw;
             }
+
+            my_net.net_params_.ConPrintOut();
 
             i = GetUserUnswer("Network is ready! Train (1), or Test (2)? (1/2):", "12");
 
