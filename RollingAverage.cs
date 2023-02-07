@@ -4,9 +4,9 @@ namespace NeuralNet
 {
     class RollingAverage<T> where T : IAdditionOperators<T, T, T>, IConvertible // System.Numerics.IDivisionOperators<T,double,double>
     {
-        int filled_by_ = 0;
-        int position_ = 0;
-        T[] array_;
+        private int filled_by_ = 0;
+        private int position_ = 0;
+        private T[] array_;
         public RollingAverage(int size) => array_ = new T[size];
         public void AddValue(T val_to_add)
         {

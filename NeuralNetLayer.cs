@@ -10,19 +10,18 @@ namespace NeuralNet
     public class NeuralNetLayer
     {
 
-        public readonly LayerPosition Position;
-        //public readonly int Index = 0;
-        public readonly int LayerSize = 0;
-        public readonly Neuron[] neurons_array_;
+        private readonly LayerPosition Position;
+        private readonly int LayerSize; //If using bias neurons it does not equal to NeuronsCount
+        private readonly Neuron[] neurons_array_;
         private readonly NeuralNetLayer? previous_layer = null;
-
+        public int NeuronsCount { get => neurons_array_.Length; }
 
         //-------------------------
         // Создает слой размером size и передает референс на предыдущий слой 
         // Если do_add_bias = true - добавляет к слою нейрон смещения сверх размера size
         public NeuralNetLayer(int size, LayerPosition pos, ActivateClass act_func,
                                 bool do_add_bias = false, NeuralNetLayer? previous = null,
-                                (float f_value_, float f_last_diff_)[][]? synapsVectors = null)
+                                (float f_value_, float f_last_diff_)[][]? synapsVectors = null) //In case we have synapse loaded form a file
         {
             Position = pos;
             if (size == 0) throw new InvalidOperationException("Trying to create a layer of zero size");
@@ -41,11 +40,14 @@ namespace NeuralNet
             }
 
         }
+
+        public Neuron GetNeuron(int neuron_index) => neurons_array_[neuron_index];
+        public float GetNeuronVal(int neuron_index) => neurons_array_[neuron_index].Val;
         //---------------------------------------
         // Инициализирует значения синапсов слоя выбранным методом
         // method - битовое поле с одним из вариантов инициализации
         //
-        public void InitSinaps(InitSynapsMethod method = InitSynapsMethod.INIT_KAIMING)
+        public void InitSynapse(InitSynapsMethod method = InitSynapsMethod.INIT_KAIMING)
         {
             if (Position == LayerPosition.Input) return; //синапсов нет
             if ((method & InitSynapsMethod.INIT_KAIMING) == InitSynapsMethod.INIT_KAIMING)

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using NeuralNet.Strategies;
 
+using DT = System.DateTime;
+
+
 namespace NeuralNet
 {
     //----------------------------------------------------
@@ -16,8 +19,8 @@ namespace NeuralNet
     //
     public class Neuron
     {
-        public (float f_value_, float f_last_diff_)[]? synaps_array_;//Массив синапсов, соединяющих нейрон с нейронами предыдущего слоя
-
+        private (float f_value_, float f_last_diff_)[]? synaps_array_;//Массив синапсов, соединяющих нейрон с нейронами предыдущего слоя
+        public (float f_value_, float f_last_diff_)[] GetSynapseArray { get => synaps_array_; }
         private float f_value_; //Значение нейрона
         public float Val    // Не дает присвоить значение нейрону сдвига 
         {
@@ -117,7 +120,7 @@ namespace NeuralNet
             for (int i = 0; i < synaps_array_.Length; i++)
             {
                 value_to_activate += synaps_array_[i].f_value_ *
-                                    previous_layer.neurons_array_[i].Val;
+                                    previous_layer.GetNeuronVal(i);
             }
             Val = ActivateStrat.ActivateValue(value_to_activate);
         }

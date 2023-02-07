@@ -49,7 +49,7 @@ namespace NeuralNet
 
             InitNeuralNetwork();
             for (int i = 0; i < net_params_.LayersSize.Length; i++)
-                net_layers_[i].InitSinaps(net_params_.InitSynaps);
+                net_layers_[i].InitSynapse(net_params_.InitSynaps);
             IsSaved = false;
             IsInitialized = true;
         }
@@ -139,11 +139,10 @@ namespace NeuralNet
 
             for (int i = 0; i < net_layers_.Length - 1; i++)
             {
-                net_info.synaps_vectors[i] = new (float f_value_, float f_last_diff_)[net_layers_[i + 1].neurons_array_.Length][];
-                for (int j = 0; j < net_layers_[i + 1].neurons_array_.Length; j++)
+                net_info.synaps_vectors[i] = new (float f_value_, float f_last_diff_)[net_layers_[i + 1].NeuronsCount][];
+                for (int j = 0; j < net_layers_[i + 1].NeuronsCount; j++)
                 {
-                    //if (net_layers_[i + 1].neurons_array_[j].synaps_array_ == null) throw new Exception("net_layers_ are not initialized!");
-                    net_info.synaps_vectors[i][j] = net_layers_[i + 1].neurons_array_[j].synaps_array_;
+                    net_info.synaps_vectors[i][j] = net_layers_[i + 1].GetNeuron(j).GetSynapseArray;
                 }
             }
 
