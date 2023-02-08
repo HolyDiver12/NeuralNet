@@ -149,6 +149,7 @@ namespace NeuralNet
 
                 foreach (var this_layer_neuron in neurons_array_)
                 {
+                    //
                     if (this_layer_neuron.IsBias) continue; // bias нейрон не обрабатываем
                     f_gradient = this_layer_neuron.Error * prev_layer_neuron.Val;
                     f_correction = learn_rate * f_gradient + momentum * this_layer_neuron.GetSynapsDiffForNeuron(prev_layer_neuron.Index);

@@ -8,8 +8,7 @@ namespace NeuralNet
 {
     public class NNData
     {
-        private bool prepared_ = false;
-        public bool is_prepared_ { get => prepared_; }
+        public bool is_prepared_ { get; private set; }
         public List<NNIcon> icons_list_ = new();  // Список иконок
 
         public int ReadFromFile(string file_name)
@@ -40,7 +39,7 @@ namespace NeuralNet
                 }
             }
             //Console.WriteLine(" " + icons_count +  " icons read");
-            prepared_ = false;
+            is_prepared_ = false;
             return icons_count;
         }
 
@@ -93,7 +92,7 @@ namespace NeuralNet
 
                 }
             }
-            prepared_ = true;
+            is_prepared_ = true;
         }
     }
 }

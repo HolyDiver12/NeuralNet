@@ -21,7 +21,7 @@ namespace NeuralNet
         public bool DoAddBias;
         public int[] LayersSize;
 
-        public NNParameters()
+        public NNParameters() //Тут нужно еще доработать
         {
             LearnRate = 0.7F;
             Momentum = 0.6F;
