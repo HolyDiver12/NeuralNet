@@ -19,7 +19,7 @@ namespace NeuralNet
         //-------------------------
         // Создает слой размером size и передает референс на предыдущий слой 
         // Если do_add_bias = true - добавляет к слою нейрон смещения сверх размера size
-        public NeuralNetLayer(int size, LayerPosition pos, ActivateClass act_func,
+        public NeuralNetLayer(int size, LayerPosition pos, IActivateFunc act_func,
                                 bool do_add_bias = false, NeuralNetLayer? previous = null,
                                 (float f_value_, float f_last_diff_)[][]? synapsVectors = null) //In case we have synapse loaded form a file
         {

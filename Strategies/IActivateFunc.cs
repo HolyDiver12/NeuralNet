@@ -8,6 +8,7 @@ namespace NeuralNet.Strategies
 {
     public interface IActivateFunc
     {
+        string FuncName {get;}
         float ActivateValue(float input_value);
         float ActivateDerivateError(float input_value);
 

@@ -15,7 +15,7 @@ namespace NeuralNet
         public float Momentum;
         public ActivationFunc Func;
         [XmlIgnore]
-        public ActivateClass activateClass;
+        public IActivateFunc activateClass;
         public InitSynapsMethod InitSynaps;
         public PrepareType NetPrepare;
         public bool DoAddBias;

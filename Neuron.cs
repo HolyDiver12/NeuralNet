@@ -33,12 +33,12 @@ namespace NeuralNet
         public float Error { get; set; } //Ошибка нейрона
         public readonly int Index;  //Индекс нейрона (присваивается при создании)
         public bool IsBias { get; private set; } //Признак нейрона сдвига для чтения снаружи класса
-        public readonly ActivateClass ActivateStrat; //Стратегия функции активации и ее производной
+        public readonly IActivateFunc ActivateStrat; //Стратегия функции активации и ее производной
 
         //-----------------------------
         //Инициализирует данные нейрона c индексом index в 0 и создает вектор синапсов размером sinaps_size
         //
-        public Neuron(int synaps_size, int index, ActivateClass act_strat, (float f_value_, float f_last_diff_)[]? synaps = null)
+        public Neuron(int synaps_size, int index, IActivateFunc act_strat, (float f_value_, float f_last_diff_)[]? synaps = null)
         {
             Index = index;
             IsBias = false;
