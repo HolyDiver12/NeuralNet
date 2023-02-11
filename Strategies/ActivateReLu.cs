@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace NeuralNet.Strategies
 {
-    public class ActivateReLu : ActivateClass, IActivateFunc
+    public class ActivateReLu : IActivateFunc
     {
-        public ActivateReLu() : base(ActivationFunc.ACT_RELU) => FuncName = "ReLu";
+        public string FuncName { get; }
+        public ActivateReLu() => FuncName = "Re Lu";
 
-        public override float ActivateValue(float input_value)
+        public  float ActivateValue(float input_value)
         {
             return input_value > 0.0F ? input_value : 0.0F;
         }
 
-        public override float ActivateDerivateError(float input_value)
+        public  float ActivateDerivateError(float input_value)
         {
             return input_value < 0 ? (float)Program.rand.NextDouble() / 20.0F : input_value;
         }

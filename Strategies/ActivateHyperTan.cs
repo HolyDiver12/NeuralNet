@@ -6,22 +6,23 @@ using System.Threading.Tasks;
 
 namespace NeuralNet.Strategies
 {
-    public class ActivateHyperTan : ActivateClass, IActivateFunc
+    public class ActivateHyperTan : IActivateFunc
     {
-        public ActivateHyperTan() : base(ActivationFunc.ACT_HYPER_TAN) => FuncName = "Hyper Tangent";
+        public string FuncName { get; }
+        public ActivateHyperTan() => FuncName = "Hyper Tangent";
 
-        public override float ActivateValue(float input_value)
+        public  float ActivateValue(float input_value)
         {
             //float La =  ((float)(Math.Exp((double)input_value * 2D) - 1D)) / ((float)(Math.Exp( (double)input_value * 2D) + 1D));
-            float La = (float)(Math.Exp((double)input_value) - Math.Exp(-(double)input_value)) /
+            return  (float)(Math.Exp((double)input_value) - Math.Exp(-(double)input_value)) /
                        (float)(Math.Exp((double)input_value) + Math.Exp(-(double)input_value));
-            return La;
+            
         }
 
-        public override float ActivateDerivateError(float input_value)
+        public  float ActivateDerivateError(float input_value)
         {
-            float La = (float)(1 - Math.Pow(ActivateValue(input_value) , 2));
-            return La;
+            return (float)(1 - Math.Pow(ActivateValue(input_value) , 2));
+            
         }
     }
 }
