@@ -8,7 +8,7 @@ namespace NeuralNet.Strategies
 {
     public class ActFuncCollection
     {
-        (ActivationFunc func_name, IActivateFunc ActivateFuncClass)[] ActivationFuncs;
+        private (ActivationFunc func_name, IActivateFunc ActivateFuncClass)[] ActivationFuncs;
         public ActFuncCollection()
         {
             ActivationFuncs = new (ActivationFunc func_name, IActivateFunc ActivateFuncClass)[3];
