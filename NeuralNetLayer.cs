@@ -51,15 +51,11 @@ namespace NeuralNet
         public void InitSynapse(InitSynapsMethod method = InitSynapsMethod.INIT_KAIMING)
         {
             if (Position == LayerPosition.Input) return; //синапсов нет
-            if (method == InitSynapsMethod.INIT_KAIMING)
+            foreach (var neuron in neurons_array_)
             {
-                foreach (var neuron in neurons_array_)
-                {
-                    neuron.InitSynaps(previous_layer == null ? 0
-                                            : previous_layer.LayerSize);
-                }
+                neuron.InitSynaps(previous_layer == null ? 0
+                                        : previous_layer.LayerSize);
             }
-            else { throw new InvalidOperationException("ERROR! Only Kaiming so far!"); }
         }
 
 
