@@ -34,16 +34,18 @@ namespace NeuralNet
         public readonly int Index;  //Индекс нейрона (присваивается при создании)
         public bool IsBias { get; private set; } //Признак нейрона сдвига для чтения снаружи класса
         public readonly IActivateFunc ActivateStrat; //Стратегия функции активации и ее производной
+        public readonly ISynapseInitFunc SynapseInitFunc; // Стратегия инициализации синапсов
 
         //-----------------------------
         //Инициализирует данные нейрона c индексом index в 0 и создает вектор синапсов размером sinaps_size
         //
-        public Neuron(int synaps_size, int index, IActivateFunc act_strat, (float f_value_, float f_last_diff_)[]? synaps = null)
+        public Neuron(int synaps_size, int index, IActivateFunc act_strat, ISynapseInitFunc syn_init_func, (float f_value_, float f_last_diff_)[]? synaps = null)
         {
             Index = index;
             IsBias = false;
             f_value_ = 0F;
             ActivateStrat = act_strat;
+            SynapseInitFunc = syn_init_func;
 
             synaps_array_ =
                 synaps == null ?
@@ -82,23 +84,23 @@ namespace NeuralNet
         //
         public void CorrectSynapsForNeuron(int neuron_index, float correction)
         {
-            synaps_array_[neuron_index].f_value_ += correction;
+            synaps_array_![neuron_index].f_value_ += correction;
             synaps_array_[neuron_index].f_last_diff_ = correction;
         }
 
         //-----------------------------------------
         // Инициализирует синапсы нейрона методом Кайминга
         //
-        public void InitSynapsKaiming(int layer_size)
+        public void InitSynaps(int layer_size)
         {
             /*
             foreach( var synaps in synaps_array_)
             {
                 synaps.f_value_ = (float)Program.rand.NextDouble() * (float)Math.Sqrt(2.0F / layer_size);
             }*/
-            for (int i = 0; i < synaps_array_.Length; i++)
+            for (int i = 0; i < synaps_array_!.Length; i++)
             {
-                synaps_array_[i].f_value_ = (float)Program.rand.NextDouble() * (float)Math.Sqrt(2.0F / layer_size);
+                synaps_array_[i].f_value_ = SynapseInitFunc.InitSynapse(layer_size);
             }
 
         }
@@ -117,7 +119,7 @@ namespace NeuralNet
                     + " are not of the same size as the layer No " + previous_layer.index_);
             }*/
             float value_to_activate = 0F;
-            for (int i = 0; i < synaps_array_.Length; i++)
+            for (int i = 0; i < synaps_array_!.Length; i++)
             {
                 value_to_activate += synaps_array_[i].f_value_ *
                                     previous_layer.GetNeuronVal(i);

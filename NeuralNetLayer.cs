@@ -19,7 +19,7 @@ namespace NeuralNet
         //-------------------------
         // Создает слой размером size и передает референс на предыдущий слой 
         // Если do_add_bias = true - добавляет к слою нейрон смещения сверх размера size
-        public NeuralNetLayer(int size, LayerPosition pos, IActivateFunc act_func,
+        public NeuralNetLayer(int size, LayerPosition pos, IActivateFunc act_func, ISynapseInitFunc synaps_init_func,
                                 bool do_add_bias = false, NeuralNetLayer? previous = null,
                                 (float f_value_, float f_last_diff_)[][]? synapsVectors = null) //In case we have synapse loaded form a file
         {
@@ -29,9 +29,10 @@ namespace NeuralNet
             previous_layer = previous;
 
             neurons_array_ = new Neuron[do_add_bias ? (size + 1) : size];
-            for (int i = 0; i < size; i++) // для всех кроме bias
+            for (int neuron_index = 0; neuron_index < size; neuron_index++) // для всех кроме bias
             {
-                neurons_array_[i] = new Neuron(previous == null ? 0 : previous.neurons_array_.Length, i, act_func, synapsVectors?[i]);
+                neurons_array_[neuron_index] = new Neuron(previous == null ? 0 : previous.neurons_array_.Length, neuron_index,
+                                                            act_func, synaps_init_func, synapsVectors?[neuron_index]);
             }
             if (do_add_bias) //если нужно добавляем bias со значением 1
             {
@@ -50,11 +51,11 @@ namespace NeuralNet
         public void InitSynapse(InitSynapsMethod method = InitSynapsMethod.INIT_KAIMING)
         {
             if (Position == LayerPosition.Input) return; //синапсов нет
-            if ((method & InitSynapsMethod.INIT_KAIMING) == InitSynapsMethod.INIT_KAIMING)
+            if (method == InitSynapsMethod.INIT_KAIMING)
             {
                 foreach (var neuron in neurons_array_)
                 {
-                    neuron.InitSynapsKaiming(previous_layer == null ? 0
+                    neuron.InitSynaps(previous_layer == null ? 0
                                             : previous_layer.LayerSize);
                 }
             }

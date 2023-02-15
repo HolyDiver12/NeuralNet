@@ -11,11 +11,15 @@ namespace NeuralNet
 {
     public class NeuralNetwork
     {
-        public NNParameters? net_params_ { get; private set;}
-        private NeuralNetLayer[]? net_layers_;
+        public NNParameters net_params_ { get; private set; }
+        private NeuralNetLayer[] net_layers_;
         public bool IsSaved { get; private set; }
         public bool IsInitialized { get; private set; }
         public string? FileName { get; private set; }
+
+        //Using stratagies interfaces
+        private IActivateFunc activateFunc;
+        private ISynapseInitFunc InitSynapsFunc;
 
         public NeuralNetwork() => IsSaved = false;
         public NeuralNetwork(string file_name)
@@ -34,11 +38,13 @@ namespace NeuralNet
             if (IsInitialized) throw new InvalidOperationException("Trying to initialize from file already initialized neural net!");
             NNSerialisationInfo? net_info = LoadNeuralNetInfo(filename);
             if (net_info == null) throw new FileLoadException("Coud not load neural net info from file " + filename);
-            net_params_ = net_info.parameters;
+            net_params_ = net_info!.parameters;
+
             InitNeuralNetwork(net_info.synaps_vectors);
             IsSaved = true;
             IsInitialized = true;
             FileName = filename;
+
         }
 
         public void InitWithParameters(NNParameters? p = null)
@@ -48,7 +54,7 @@ namespace NeuralNet
             if (p != null) net_params_ = p;
 
             InitNeuralNetwork();
-            for (int i = 0; i < net_params_.LayersSize.Length; i++)
+            for (int i = 0; i < net_params_!.LayersSize.Length; i++)
                 net_layers_[i].InitSynapse(net_params_.InitSynaps);
             IsSaved = false;
             IsInitialized = true;
@@ -63,19 +69,11 @@ namespace NeuralNet
             if (net_params_.LayersSize.Length < 2)
                 throw new InvalidOperationException("Neural net shoul has at least 2 layers");
 
-            IActivateFunc act_func = net_params_.activateClass; 
-            /*switch (net_params_.Func)
-            {
-                case ActivationFunc.ACT_SIGMOID:
-                    act_func = new ActivateSigmoid();
-                    break;
-                case ActivationFunc.ACT_HYPER_TAN:
-                    act_func = new ActivateHyperTan();
-                    break;
-                default:
-                    act_func = new ActivateReLu();
-                    break;
-            }*/
+            ActFuncCollection act_collection = new();
+            activateFunc = act_collection.GetActivateFuncClass(net_params_.Func);
+            InitSynapsFuncCillection init_synaps_collection = new();
+            InitSynapsFunc = init_synaps_collection.GetSynapseInitFunc(net_params_.InitSynaps);
+
 
             net_layers_ = new NeuralNetLayer[net_params_.LayersSize.Length];
             for (int i = 0; i < net_params_.LayersSize.Length; i++)
@@ -83,14 +81,16 @@ namespace NeuralNet
                 if (i == 0)
                     net_layers_[i] = new NeuralNetLayer(net_params_.LayersSize[i],
                                                         LayerPosition.Input,
-                                                        act_func,
+                                                        activateFunc,
+                                                        InitSynapsFunc,
                                                         net_params_.DoAddBias);
 
 
                 else if (i == net_params_.LayersSize.Length - 1)
                     net_layers_[i] = new NeuralNetLayer(net_params_.LayersSize[i],
                                                         LayerPosition.Out,
-                                                        act_func,
+                                                        activateFunc,
+                                                        InitSynapsFunc,
                                                         false, //В последнем слое нейронов смещения не бывает
                                                         net_layers_[i - 1],
                                                         synaps_vectors == null ? null : synaps_vectors[i - 1]);
@@ -98,7 +98,8 @@ namespace NeuralNet
                 else
                     net_layers_[i] = new NeuralNetLayer(net_params_.LayersSize[i],
                                                         LayerPosition.Hidden,
-                                                        act_func,
+                                                        activateFunc,
+                                                        InitSynapsFunc,
                                                         net_params_.DoAddBias,
                                                         net_layers_[i - 1],
                                                         synaps_vectors == null ? null : synaps_vectors[i - 1]);
@@ -165,7 +166,22 @@ namespace NeuralNet
 
         }
 
+        public void ConPrintOut()
+        {
+            if (!IsInitialized)
+            {
+                Console.WriteLine("Neural Net hasn't been initialized yet!");
+                return;
+            }
+            Console.WriteLine("Neural Network parameters are:");
+            Console.WriteLine("\tUse bias neurons: " + (this.net_params_.DoAddBias ? "Yes" : "No"));
+            Console.WriteLine("\tActivation function used: " + activateFunc.FuncName);
+            Console.WriteLine("\tInitialization method for synaps: " + InitSynapsFunc.FuncName);
+            Console.WriteLine($"\tLearn rate is: {net_params_.LearnRate} ; Momentum is {net_params_.Momentum}");
+            Console.WriteLine($"\tNeural network has got {net_params_.LayersSize.Length} layers of which:");
+            for (int i = 0; i < net_params_.LayersSize.Length; i++)
+                Console.WriteLine($"\t\tLayer {i + 1} has {net_params_.LayersSize[i]} neurons");
+        }
 
     }
-
 }

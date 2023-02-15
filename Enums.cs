@@ -10,7 +10,7 @@ namespace NeuralNet
     {
         PREP_UNSIG = 1,
         PREP_ZERO_AV = 2,
-        PREP_ZERO_WAV = 4
+        PREP_ZERO_WAV = 3
     }
 
     public enum ActivationFunc
@@ -23,7 +23,7 @@ namespace NeuralNet
     public enum InitSynapsMethod
     {
         INIT_KAIMING = 1,
-        INIT_LSUV = 2
+        INIT_RAND = 2
     }
 
     public enum LayerPosition

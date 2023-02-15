@@ -35,7 +35,7 @@
                 throw;
             }
 
-            my_net.net_params_.ConPrintOut();
+            my_net.ConPrintOut();
 
             Console.Write("Network is ready! ");
 

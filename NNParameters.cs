@@ -14,30 +14,26 @@ namespace NeuralNet
         public float LearnRate;
         public float Momentum;
         public ActivationFunc Func;
-        [XmlIgnore]
-        public IActivateFunc activateClass;
         public InitSynapsMethod InitSynaps;
         public PrepareType NetPrepare;
         public bool DoAddBias;
         public int[] LayersSize;
 
-        public NNParameters() //Тут нужно еще доработать
+        public NNParameters() 
         {
             LearnRate = 0.7F;
             Momentum = 0.6F;
-            //Func = ActivationFunc.ACT_SIGMOID;
             Func = ActivationFunc.ACT_SIGMOID;
-            activateClass = new ActivateSigmoid();
             InitSynaps = InitSynapsMethod.INIT_KAIMING;
             NetPrepare = PrepareType.PREP_ZERO_WAV;
             DoAddBias = true;
             LayersSize = new int[] { 64, 50, 50, 10 };
         }
-        public void ConPrintOut()
+        /*public void ConPrintOut()
         {
             Console.WriteLine("Neural Network parameters are:");
             Console.WriteLine("\tUse bias neurons: " + (DoAddBias? "Yes" : "No"));
-            Console.WriteLine("\tActivation function used: " + activateClass.FuncName);
+            //Console.WriteLine("\tActivation function used: " + activateClass.FuncName);
             Console.Write("\tInitialization method for synaps: ");
             switch (InitSynaps)
             {
@@ -55,6 +51,6 @@ namespace NeuralNet
             Console.WriteLine($"\tNeural network has got {LayersSize.Length} layers of which:" );
             for( int i = 0; i < LayersSize.Length; i++)
                 Console.WriteLine($"\t\tLayer {i+1} has {LayersSize[i]} neurons");
-        }
+        }*/
     }
 }

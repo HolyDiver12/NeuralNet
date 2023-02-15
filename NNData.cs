@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeuralNet.Strategies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,52 +47,9 @@ namespace NeuralNet
         public void Prepare(PrepareType prep_type)
         {
             if (is_prepared_) return;
-            if (icons_list_.Count == 0) return;
-
-            float min;
-            float max;
-            float wa_icon;
-            float wa = 0F;
-            float fmax;
-
-            min = max = icons_list_[0].data_[0];
-            foreach (var icon in icons_list_)
-            {
-                wa_icon = 0f;
-                for (int i = 0; i < Program.NN_ICON_SIZE; i++)
-                {
-                    min = icon.data_[i] < min ? icon.data_[i] : min;
-                    max = icon.data_[i] > max ? icon.data_[i] : max;
-                    wa_icon += icon.data_[i];
-                }
-                wa_icon /= Program.NN_ICON_SIZE;
-                wa += wa_icon / icons_list_.Count;
-            }
-            wa -= min;
-
-            float f_divider = (max - wa) > (wa - min) ? max - wa : wa - min;
-            foreach (var icon in icons_list_)
-            {
-                for (int i = 0; i < Program.NN_ICON_SIZE; i++)
-                {
-                    if ((prep_type & PrepareType.PREP_UNSIG) == PrepareType.PREP_UNSIG)
-                    {
-                        icon.data_[i] = (icon.data_[i] - min) / (max - min);
-                    }
-                    else if ((prep_type & PrepareType.PREP_ZERO_AV) == PrepareType.PREP_ZERO_AV)
-                    {
-                        fmax = max - min;
-                        icon.data_[i] = (icon.data_[i] - min - (fmax / 2.0F)) / (fmax / 2.0F);
-                    }
-                    else if ((prep_type & PrepareType.PREP_ZERO_WAV) == PrepareType.PREP_ZERO_WAV)
-                    {
-                        icon.data_[i] = (icon.data_[i] - min - wa) / f_divider;
-                    }
-                    else
-                        return;
-
-                }
-            }
+            PrepIconsFuncCollection func_collection = new();
+            IPrepareIcons prepIconsFunc = func_collection.GetPrepareIconsClass(prep_type);
+            prepIconsFunc.PrepareIcons(icons_list_);
             is_prepared_ = true;
         }
     }
